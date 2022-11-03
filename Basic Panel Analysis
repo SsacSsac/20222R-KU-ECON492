@@ -1,0 +1,21 @@
+data<-read.csv("C:/Users/Shin/Desktop/data_complete.csv",header=T)
+View(data)
+time<-data[,1]
+product<-data[,2]
+CPI<-data[,3]
+Online<-data[,4]
+pCPI<-data[,5]
+exr<-data[,6]
+ggap<-data[,7]
+data2<-data.frame(time,product,CPI,Online,pCPI,exr,ggap)
+View(data2)
+library(plm)
+
+panel<-pdata.frame(data2,index=c("product","time"))
+model1<-plm(formula=CPI~Online+pCPI+exr+ggap,data=panel,model="pooling") # POLS
+model2<-plm(formula=CPI~Online+pCPI+exr+ggap,data=panel,model="within") # 고정효과
+model3<-plm(formula=CPI~Online+pCPI+exr+ggap,data=panel,model="random") # 임의효과
+
+plmtest(model1,effect="individual", type="bp")
+phtest(model2, model3)
+
